@@ -1,0 +1,88 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+/* header */
+
+header {
+  background-color: #0da2ff;
+  color: white;
+  text-align: center;
+  text-decoration: underline;
+  padding: 50px;
+}
+
+.info-keuangan {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: white;
+  width: 300px;
+  height: 100px;
+  color: black;
+  text-align: left;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.card-uang {
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.card-uang.pemasukan {
+  color: green;
+}
+
+.card-uang.pengeluaran {
+  color: red;
+}
+
+/* main */
+
+main {
+  margin: 20px 70px 10px 70px;
+}
+
+.main-control {
+  display: flex;
+  justify-content: space-between;
+  margin: inherit;
+}
+
+.main-control button {
+  border: 0;
+  border-radius: 5px;
+  background-color: #0da2ff;
+  color: white;
+  padding: 10px;
+  font-size: large;
+  font-weight: 500;
+}
+
+.main-control button:hover {
+  background-color: #0d94e7;
+}
+
+.main-control button:active {
+  background-color: #0e7bbe;
+}
+
+table {
+  width: 100%;
+}
+
+th,
+td {
+  border-bottom: 1px solid #ddd;
+}
