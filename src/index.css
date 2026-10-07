@@ -51,16 +51,28 @@ header {
 /* main */
 
 main {
-  margin: 20px 70px 10px 70px;
+  margin: 20px 200px 10px 200px;
 }
 
 .main-control {
   display: flex;
   justify-content: space-between;
-  margin: inherit;
 }
 
-.main-control button {
+.main-control select {
+  border: 0;
+  border-bottom: 1px solid #0d94e7;
+  padding: 10px;
+  font-size: large;
+  font-weight: 500;
+}
+
+.main-control select:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+button {
   border: 0;
   border-radius: 5px;
   background-color: #0da2ff;
@@ -79,10 +91,49 @@ main {
 }
 
 table {
+  margin-top: 30px;
   width: 100%;
 }
 
 th,
 td {
   border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+td {
+  padding: 10px;
+}
+
+td.pengeluaran {
+  color: red;
+  font-weight: 500;
+}
+
+td.pemasukan {
+  color: rgb(0, 165, 0);
+  font-weight: 500;
+}
+
+.btn-edit {
+  background-color: orange;
+}
+
+.btn-edit:hover {
+  background-color: rgb(219, 143, 0);
+}
+
+.btn-edit:active {
+  background-color: rgb(177, 115, 0);
+}
+
+.btn-hapus {
+  background-color: red;
+  margin-left: 10px;
+}
+.btn-hapus:hover {
+  background-color: rgb(209, 0, 0);
+}
+.btn-hapus:active {
+  background-color: rgb(163, 0, 0);
 }
