@@ -70,7 +70,7 @@ function Main({ onTambahData, transaksi }) {
     tipe: "",
     tanggal: "",
   });
-  const [dataFilter, setdataFilter] = useState(transaksi);
+  const [filterKategori, setFilterKategori] = useState("");
 
   // fungsi digunakan untuk menampilkan form dan tidak
   function handleShowForm() {
@@ -93,16 +93,12 @@ function Main({ onTambahData, transaksi }) {
     });
   }
 
-  // fungsi untuk filter kategori
-  function handleFilterKategori(value) {
-    const filter = value.target.value;
-    if (filter === "") {
-      return setdataFilter(transaksi);
-    }
+  // fungsi untuk memfilter data dari inputan select user, lalu disesuaikan dengan kategori
+  const dataFilter = transaksi.filter((e) => {
+    if (filterKategori === "") return true;
 
-    const data = transaksi.filter((e) => e.kategori === filter);
-    setdataFilter(data);
-  }
+    return e.kategori === filterKategori;
+  });
 
   return (
     <main>
@@ -112,7 +108,10 @@ function Main({ onTambahData, transaksi }) {
           text={showForm ? "Tutup Form" : "+ Tambah Transaksi"}
           onClick={handleShowForm}
         />
-        <Select onChange={handleFilterKategori} />
+        <Select
+          value={filterKategori}
+          onChange={(e) => setFilterKategori(e.target.value)}
+        />
       </div>
       <div className={`form ${showForm ? "" : "hidden"}`}>
         <form onSubmit={(data) => handleDataBaru(data)}>
@@ -166,6 +165,7 @@ function Button({ type = "button", jenis, text, onClick }) {
 }
 
 function Input({ inputData, setInputData }) {
+  
   // fungsi untuk mengatasi gantinya value, karena kalau satu satu akan cukup banyak yang diganti
   function handleChange(e) {
     const { name, value } = e.target;
@@ -241,7 +241,7 @@ function Item({ nomor, keterangan, kategori, jumlah, tipe, tanggal }) {
     <tr>
       <td>{nomor + 1}</td>
       <td>{keterangan}</td>
-      <td>{kategori}</td>
+      <td>{kategori.charAt(0).toUpperCase() + kategori.slice(1)}</td>
       <td className={tipe}>Rp {jumlah},-</td>
       <td>{tanggal}</td>
       <td>
