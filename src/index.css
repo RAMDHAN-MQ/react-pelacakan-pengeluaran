@@ -75,18 +75,21 @@ select:focus {
 button {
   border: 0;
   border-radius: 5px;
-  background-color: #0da2ff;
   color: white;
   padding: 10px;
   font-size: large;
   font-weight: 500;
 }
 
-.main-control button:hover {
+button.btn-tambah {
+  background-color: #0da2ff;
+}
+
+button.btn-tambah:hover {
   background-color: #0d94e7;
 }
 
-.main-control button:active {
+button.btn-tambah:active {
   background-color: #0e7bbe;
 }
 

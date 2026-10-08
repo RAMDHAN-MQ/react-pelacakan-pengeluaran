@@ -1,17 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
 
-const transaksi1 = [
-  {
-    id: 1,
-    keterangan: "beli makan",
-    kategori: "makanan",
-    jumlah: "9000",
-    tipe: "pengeluaran",
-    tanggal: "1212026",
-  },
-];
-
 export default function App() {
   const [transaksi, setTransaksi] = useState(() => {
     const data = localStorage.getItem("transaksi");
@@ -19,15 +8,21 @@ export default function App() {
     return data ? JSON.parse(data) : [];
   });
 
-  useEffect(() => {
-    localStorage.setItem("transaksi", JSON.stringify(transaksi));
-  }, [transaksi]);
-
   const [uang, setUang] = useState({
     saldo: 0,
     pemasukan: 0,
     pengeluaran: 0,
   });
+
+  useEffect(() => {
+    localStorage.setItem("transaksi", JSON.stringify(transaksi));
+  }, [transaksi]);
+
+  // fungsi untuk menambahkan data ke localstorage
+  function handleTambahData(dataBaru) {
+    console.log(dataBaru);
+    setTransaksi([...transaksi, dataBaru]);
+  }
 
   return (
     <div className="container">
@@ -36,7 +31,7 @@ export default function App() {
         pemasukan={uang.pemasukan}
         pengeluaran={uang.pengeluaran}
       />
-      <Main />
+      <Main onTambahData={handleTambahData} transaksi={transaksi} />
     </div>
   );
 }
@@ -65,11 +60,36 @@ function Card({ tipe, uang }) {
   );
 }
 
-function Main() {
+function Main({ onTambahData, transaksi }) {
   const [showForm, setShowForm] = useState(false);
+  const [inputData, setInputData] = useState({
+    id: 1,
+    keterangan: "",
+    kategori: "",
+    jumlah: 0,
+    tipe: "",
+    tanggal: "",
+  });
 
+  // fungsi digunakan untuk menampilkan form dan tidak
   function handleShowForm() {
     setShowForm(!showForm);
+  }
+
+  // fungsi untuk membuat data baru dan mengirimkan ke fungsi onTambahData
+  function handleDataBaru(data) {
+    data.preventDefault();
+
+    const dataBaru = { ...inputData, id: Date.now() };
+    onTambahData(dataBaru);
+    setInputData({
+      id: 1,
+      keterangan: "",
+      kategori: "",
+      jumlah: 0,
+      tipe: "",
+      tanggal: "",
+    });
   }
 
   return (
@@ -83,9 +103,9 @@ function Main() {
         <Select />
       </div>
       <div className={`form ${showForm ? "" : "hidden"}`}>
-        <form>
-          <Input />
-          <Button type={"submit"} text={"Simpan"} />
+        <form onSubmit={(data) => handleDataBaru(data)}>
+          <Input inputData={inputData} setInputData={setInputData} />
+          <Button jenis={"tambah"} type={"submit"} text={"Simpan"} />
         </form>
       </div>
       <div className="transaksi-list">
@@ -101,7 +121,17 @@ function Main() {
             </tr>
           </thead>
           <tbody>
-            <Item />
+            {transaksi.map((e, i) => (
+              <Item
+                key={e.id}
+                nomor={i}
+                keterangan={e.keterangan}
+                kategori={e.kategori}
+                jumlah={e.jumlah}
+                tipe={e.tipe}
+                tanggal={e.tanggal}
+              />
+            ))}
           </tbody>
         </table>
       </div>
@@ -109,67 +139,93 @@ function Main() {
   );
 }
 
-function Button({ type, jenis, text, onClick }) {
+function Button({ type = "button", jenis, text, onClick }) {
   return (
-    <button
-      type={type ? "button" : "submit"}
-      className={`btn-${jenis}`}
-      onClick={onClick}
-    >
+    <button type={type} className={`btn-${jenis}`} onClick={onClick}>
       {text}
     </button>
   );
 }
 
-function Input() {
+function Input({ inputData, setInputData }) {
+  // fungsi untuk mengatasi gantinya value, karena kalau satu satu akan cukup banyak yang diganti
+  function handleChange(e) {
+    const { name, value } = e.target;
+
+    setInputData({
+      ...inputData,
+      [name]: name === "jumlah" ? Number(value) : value,
+    });
+  }
+
   return (
     <>
       <div className="item-input">
         <label htmlFor="">Keterangan :</label>
-        <input type="text" placeholder="Masukkan kategori transaksi" />
+        <input
+          type="text"
+          placeholder="Masukkan kategori transaksi"
+          name="keterangan"
+          value={inputData.keterangan}
+          onChange={handleChange}
+        />
       </div>
       <div className="item-input">
         <label htmlFor="">Kategori :</label>
-        <Select />
+        <Select input={inputData.kategori} onChange={handleChange} />
       </div>
       <div className="item-input">
         <label htmlFor="">Jumlah Uang :</label>
-        <input type="number" placeholder="Masukkan Jumlah Uang" />
+        <input
+          type="number"
+          name="jumlah"
+          placeholder="Masukkan Jumlah Uang"
+          value={inputData.jumlah !== 0 ? inputData.jumlah : ""}
+          onChange={handleChange}
+        />
       </div>
       <div className="item-input">
         <label htmlFor="">Tipe Pengeluaran :</label>
-        <select name="" id="">
-          <option value="">Pengeluaran</option>
-          <option value="">Pemasukan</option>
+        <select name="tipe" value={inputData.tipe} onChange={handleChange}>
+          <option value="">-- Pilih Tipe --</option>
+          <option value="pengeluaran">Pengeluaran</option>
+          <option value="pemasukan">Pemasukan</option>
         </select>
       </div>
       <div className="item-input">
         <label htmlFor="">Tanggal :</label>
-        <input type="date" className="date" />
+        <input
+          type="date"
+          className="date"
+          name="tanggal"
+          value={inputData.tanggal}
+          onChange={handleChange}
+        />
       </div>
     </>
   );
 }
 
-function Select() {
+function Select({ input, onChange }) {
   return (
-    <select>
-      <option value="default">Filter Kategori</option>
+    <select name="kategori" value={input} onChange={onChange}>
+      <option value="">-- Pilih Kategori --</option>
       <option value="makan">Makan / Minum</option>
       <option value="belanja">Belanja</option>
       <option value="transport">Transport</option>
+      <option value="bekal">Bekal</option>
     </select>
   );
 }
 
-function Item() {
+function Item({ nomor, keterangan, kategori, jumlah, tipe, tanggal }) {
   return (
     <tr>
-      <td>1</td>
-      <td>Beli makan</td>
-      <td>Makanan</td>
-      <td className="pengeluaran">Rp 9.000,-</td>
-      <td>12-1-2020</td>
+      <td>{nomor + 1}</td>
+      <td>{keterangan}</td>
+      <td>{kategori}</td>
+      <td className={tipe}>Rp {jumlah},-</td>
+      <td>{tanggal}</td>
       <td>
         <Button jenis={"edit"} text={"Edit"} />
         <Button jenis={"hapus"} text={"Hapus"} />
