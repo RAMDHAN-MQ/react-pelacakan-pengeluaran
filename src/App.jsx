@@ -70,6 +70,7 @@ function Main({ onTambahData, transaksi }) {
     tipe: "",
     tanggal: "",
   });
+  const [dataFilter, setdataFilter] = useState(transaksi);
 
   // fungsi digunakan untuk menampilkan form dan tidak
   function handleShowForm() {
@@ -92,6 +93,17 @@ function Main({ onTambahData, transaksi }) {
     });
   }
 
+  // fungsi untuk filter kategori
+  function handleFilterKategori(value) {
+    const filter = value.target.value;
+    if (filter === "") {
+      return setdataFilter(transaksi);
+    }
+
+    const data = transaksi.filter((e) => e.kategori === filter);
+    setdataFilter(data);
+  }
+
   return (
     <main>
       <div className="main-control">
@@ -100,7 +112,7 @@ function Main({ onTambahData, transaksi }) {
           text={showForm ? "Tutup Form" : "+ Tambah Transaksi"}
           onClick={handleShowForm}
         />
-        <Select />
+        <Select onChange={handleFilterKategori} />
       </div>
       <div className={`form ${showForm ? "" : "hidden"}`}>
         <form onSubmit={(data) => handleDataBaru(data)}>
@@ -121,17 +133,23 @@ function Main({ onTambahData, transaksi }) {
             </tr>
           </thead>
           <tbody>
-            {transaksi.map((e, i) => (
-              <Item
-                key={e.id}
-                nomor={i}
-                keterangan={e.keterangan}
-                kategori={e.kategori}
-                jumlah={e.jumlah}
-                tipe={e.tipe}
-                tanggal={e.tanggal}
-              />
-            ))}
+            {dataFilter.length === 0 ? (
+              <tr>
+                <td colSpan={6}>Tidak ada data</td>
+              </tr>
+            ) : (
+              dataFilter.map((e, i) => (
+                <Item
+                  key={e.id}
+                  nomor={i}
+                  keterangan={e.keterangan}
+                  kategori={e.kategori}
+                  jumlah={e.jumlah}
+                  tipe={e.tipe}
+                  tanggal={e.tanggal}
+                />
+              ))
+            )}
           </tbody>
         </table>
       </div>
