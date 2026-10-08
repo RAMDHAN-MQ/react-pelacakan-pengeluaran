@@ -1,6 +1,7 @@
+import { useEffect } from "react";
 import { useState } from "react";
 
-const transaksi = [
+const transaksi1 = [
   {
     id: 1,
     keterangan: "beli makan",
@@ -12,6 +13,16 @@ const transaksi = [
 ];
 
 export default function App() {
+  const [transaksi, setTransaksi] = useState(() => {
+    const data = localStorage.getItem("transaksi");
+
+    return data ? JSON.parse(data) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("transaksi", JSON.stringify(transaksi));
+  }, [transaksi]);
+
   const [uang, setUang] = useState({
     saldo: 0,
     pemasukan: 0,
@@ -55,11 +66,27 @@ function Card({ tipe, uang }) {
 }
 
 function Main() {
+  const [showForm, setShowForm] = useState(false);
+
+  function handleShowForm() {
+    setShowForm(!showForm);
+  }
+
   return (
     <main>
       <div className="main-control">
-        <Button tipe={"tambah"} text={"+ Tambah Transaksi"} />
+        <Button
+          jenis={"tambah"}
+          text={showForm ? "Tutup Form" : "+ Tambah Transaksi"}
+          onClick={handleShowForm}
+        />
         <Select />
+      </div>
+      <div className={`form ${showForm ? "" : "hidden"}`}>
+        <form>
+          <Input />
+          <Button type={"submit"} text={"Simpan"} />
+        </form>
       </div>
       <div className="transaksi-list">
         <table>
@@ -82,8 +109,46 @@ function Main() {
   );
 }
 
-function Button({ tipe, text }) {
-  return <button className={`btn-${tipe}`}>{text}</button>;
+function Button({ type, jenis, text, onClick }) {
+  return (
+    <button
+      type={type ? "button" : "submit"}
+      className={`btn-${jenis}`}
+      onClick={onClick}
+    >
+      {text}
+    </button>
+  );
+}
+
+function Input() {
+  return (
+    <>
+      <div className="item-input">
+        <label htmlFor="">Keterangan :</label>
+        <input type="text" placeholder="Masukkan kategori transaksi" />
+      </div>
+      <div className="item-input">
+        <label htmlFor="">Kategori :</label>
+        <Select />
+      </div>
+      <div className="item-input">
+        <label htmlFor="">Jumlah Uang :</label>
+        <input type="number" placeholder="Masukkan Jumlah Uang" />
+      </div>
+      <div className="item-input">
+        <label htmlFor="">Tipe Pengeluaran :</label>
+        <select name="" id="">
+          <option value="">Pengeluaran</option>
+          <option value="">Pemasukan</option>
+        </select>
+      </div>
+      <div className="item-input">
+        <label htmlFor="">Tanggal :</label>
+        <input type="date" className="date" />
+      </div>
+    </>
+  );
 }
 
 function Select() {
@@ -106,8 +171,8 @@ function Item() {
       <td className="pengeluaran">Rp 9.000,-</td>
       <td>12-1-2020</td>
       <td>
-        <Button tipe={"edit"} text={"Edit"} />
-        <Button tipe={"hapus"} text={"Hapus"} />
+        <Button jenis={"edit"} text={"Edit"} />
+        <Button jenis={"hapus"} text={"Hapus"} />
       </td>
     </tr>
   );

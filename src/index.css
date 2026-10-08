@@ -59,7 +59,7 @@ main {
   justify-content: space-between;
 }
 
-.main-control select {
+select {
   border: 0;
   border-bottom: 1px solid #0d94e7;
   padding: 10px;
@@ -67,7 +67,7 @@ main {
   font-weight: 500;
 }
 
-.main-control select:focus {
+select:focus {
   outline: none;
   box-shadow: none;
 }
@@ -88,6 +88,50 @@ button {
 
 .main-control button:active {
   background-color: #0e7bbe;
+}
+
+.form {
+  border: 3px solid black;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.form.hidden {
+  display: none;
+}
+
+.form label {
+  margin-right: 5px;
+  width: 150px;
+}
+
+.form input {
+  border: 0;
+  padding: 10px;
+  padding-left: 0px;
+  padding-bottom: 5px;
+  border-bottom: 2px solid black;
+  width: 100%;
+}
+
+.form input:focus {
+  border-bottom: 2px solid #0d94e7;
+  outline: none;
+  box-shadow: none;
+}
+
+.form .date {
+  width: 20%;
+}
+
+.item-input {
+  margin-bottom: 20px;
+}
+
+.form select {
+  font-size: 13px;
+  text-align: left;
 }
 
 table {
