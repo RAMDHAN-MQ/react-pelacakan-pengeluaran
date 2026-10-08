@@ -24,8 +24,7 @@ export default function App() {
 
   // fungsi untuk menambahkan data ke localstorage
   function handleTambahData(dataBaru) {
-    console.log(dataBaru);
-    setTransaksi([...transaksi, dataBaru]);
+    setTransaksi((data) => [...data, dataBaru]);
   }
 
   return (
@@ -165,7 +164,6 @@ function Button({ type = "button", jenis, text, onClick }) {
 }
 
 function Input({ inputData, setInputData }) {
-  
   // fungsi untuk mengatasi gantinya value, karena kalau satu satu akan cukup banyak yang diganti
   function handleChange(e) {
     const { name, value } = e.target;
