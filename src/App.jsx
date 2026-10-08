@@ -8,11 +8,15 @@ export default function App() {
     return data ? JSON.parse(data) : [];
   });
 
-  const [uang, setUang] = useState({
-    saldo: 0,
-    pemasukan: 0,
-    pengeluaran: 0,
-  });
+  const pemasukan = transaksi
+    .filter((e) => e.tipe === "pemasukan")
+    .reduce((a, b) => a + b.jumlah, 0);
+
+  const pengeluaran = transaksi
+    .filter((e) => e.tipe === "pengeluaran")
+    .reduce((a, b) => a + b.jumlah, 0);
+
+  const saldo = pemasukan - pengeluaran;
 
   useEffect(() => {
     localStorage.setItem("transaksi", JSON.stringify(transaksi));
@@ -26,11 +30,7 @@ export default function App() {
 
   return (
     <div className="container">
-      <Header
-        saldo={uang.saldo}
-        pemasukan={uang.pemasukan}
-        pengeluaran={uang.pengeluaran}
-      />
+      <Header saldo={saldo} pemasukan={pemasukan} pengeluaran={pengeluaran} />
       <Main onTambahData={handleTambahData} transaksi={transaksi} />
     </div>
   );
