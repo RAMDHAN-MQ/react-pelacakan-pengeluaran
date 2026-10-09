@@ -1,5 +1,5 @@
 # Pelacakan Pengeluaran
-Website tentang pencatatan pengeluaran simple menggunakan React + Vite.
+Website tentang pencatatan pengeluaran sederhana menggunakan React + Vite.
 
 # Fitur
 1. Melakukan CRUD (Create, Read, Update, Delete).
