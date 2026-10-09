@@ -27,10 +27,20 @@ export default function App() {
     setTransaksi((data) => [...data, dataBaru]);
   }
 
+  // fungsi untuk menghapus data di localstorage
+  function handleHapusData(id) {
+    const dataFilter = transaksi.filter((e) => e.id !== id);
+    setTransaksi(dataFilter);
+  }
+
   return (
     <div className="container">
       <Header saldo={saldo} pemasukan={pemasukan} pengeluaran={pengeluaran} />
-      <Main onTambahData={handleTambahData} transaksi={transaksi} />
+      <Main
+        onTambahData={handleTambahData}
+        transaksi={transaksi}
+        onHapusData={handleHapusData}
+      />
     </div>
   );
 }
@@ -59,7 +69,7 @@ function Card({ tipe, uang }) {
   );
 }
 
-function Main({ onTambahData, transaksi }) {
+function Main({ onTambahData, transaksi, onHapusData }) {
   const [showForm, setShowForm] = useState(false);
   const [inputData, setInputData] = useState({
     id: 1,
@@ -90,6 +100,7 @@ function Main({ onTambahData, transaksi }) {
       tipe: "",
       tanggal: "",
     });
+    setShowForm(false);
   }
 
   // fungsi untuk memfilter data dari inputan select user, lalu disesuaikan dengan kategori
@@ -140,11 +151,8 @@ function Main({ onTambahData, transaksi }) {
                 <Item
                   key={e.id}
                   nomor={i}
-                  keterangan={e.keterangan}
-                  kategori={e.kategori}
-                  jumlah={e.jumlah}
-                  tipe={e.tipe}
-                  tanggal={e.tanggal}
+                  transaksi={e}
+                  onHapusData={onHapusData}
                 />
               ))
             )}
@@ -184,6 +192,7 @@ function Input({ inputData, setInputData }) {
           name="keterangan"
           value={inputData.keterangan}
           onChange={handleChange}
+          required
         />
       </div>
       <div className="item-input">
@@ -198,6 +207,7 @@ function Input({ inputData, setInputData }) {
           placeholder="Masukkan Jumlah Uang"
           value={inputData.jumlah !== 0 ? inputData.jumlah : ""}
           onChange={handleChange}
+          required
         />
       </div>
       <div className="item-input">
@@ -216,6 +226,7 @@ function Input({ inputData, setInputData }) {
           name="tanggal"
           value={inputData.tanggal}
           onChange={handleChange}
+          required
         />
       </div>
     </>
@@ -234,17 +245,24 @@ function Select({ input, onChange }) {
   );
 }
 
-function Item({ nomor, keterangan, kategori, jumlah, tipe, tanggal }) {
+function Item({ nomor, transaksi, onHapusData }) {
   return (
     <tr>
       <td>{nomor + 1}</td>
-      <td>{keterangan}</td>
-      <td>{kategori.charAt(0).toUpperCase() + kategori.slice(1)}</td>
-      <td className={tipe}>Rp {jumlah},-</td>
-      <td>{tanggal}</td>
+      <td>{transaksi.keterangan}</td>
+      <td>
+        {transaksi.kategori.charAt(0).toUpperCase() +
+          transaksi.kategori.slice(1)}
+      </td>
+      <td className={transaksi.tipe}>Rp {transaksi.jumlah},-</td>
+      <td>{transaksi.tanggal}</td>
       <td>
         <Button jenis={"edit"} text={"Edit"} />
-        <Button jenis={"hapus"} text={"Hapus"} />
+        <Button
+          jenis={"hapus"}
+          text={"Hapus"}
+          onClick={() => onHapusData(transaksi.id)}
+        />
       </td>
     </tr>
   );
