@@ -22,12 +22,10 @@ export default function Main({
   const [filterKategori, setFilterKategori] = useState("");
   const [editData, setEditData] = useState(false);
 
-  // fungsi digunakan untuk menampilkan form dan tidak
   function handleShowForm() {
     setShowForm(!showForm);
   }
 
-  // fungsi untuk membuat data baru dan mengirimkan ke fungsi onTambahData
   function handleDataBaru(data) {
     data.preventDefault();
 
@@ -49,14 +47,12 @@ export default function Main({
     setEditData(false);
   }
 
-  // fungsi untuk memfilter data dari inputan select user, lalu disesuaikan dengan kategori
   const dataFilter = transaksi.filter((e) => {
     if (filterKategori === "") return true;
 
     return e.kategori === filterKategori;
   });
 
-  // fungsi untuk mengirim data yang diedit ke form input
   function handleDataEdit(id) {
     const dataEdit = transaksi.find((e) => e.id === id);
     setShowForm(true);

@@ -1,7 +1,6 @@
 import Select from "./Select";
 
 export default function Input({ inputData, setInputData }) {
-  // fungsi untuk mengatasi gantinya value, karena kalau satu satu akan cukup banyak yang diganti
   function handleChange(e) {
     const { name, value } = e.target;
 
